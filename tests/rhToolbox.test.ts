@@ -976,7 +976,11 @@ test('RH toolbox runtime can consume private maker events without shipping maker
   assert.match(node, /function dedupeRhToolboxDisplayTools/);
   assert.match(node, /dedupeRhToolboxDisplayTools\(listRhToolboxTools\(manifest, \{ includeDisabled: true \}\)/);
   assert.match(node, /dedupeRhToolboxDisplayTools\(filterRhToolboxTools\(manifest,/);
-  assert.match(node, /window\.setInterval\(\(\) => refreshManifest\(\), 1500\)/);
+  assert.match(node, /window\.addEventListener\('penguin:rh-toolbox-manifest-updated', refreshManifest\)/);
+  assert.match(node, /document\.addEventListener\('visibilitychange', refreshWhenVisible\)/);
+  assert.match(node, /window\.addEventListener\('focus', refreshWhenVisible\)/);
+  assert.match(node, /window\.removeEventListener\('penguin:rh-toolbox-manifest-updated', refreshManifest\)/);
+  assert.doesNotMatch(node, /window\.setInterval\(\(\) => refreshManifest\(\), 1500\)/);
   assert.match(node, /当前 manifest 有 \{allTools\.length\} 个工具/);
   assert.match(node, /rhToolboxSearchQuery:\s*''/);
   assert.match(node, /rhToolboxCategoryId:\s*RH_TOOLBOX_ALL_CATEGORY_ID/);

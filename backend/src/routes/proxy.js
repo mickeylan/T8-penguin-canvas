@@ -21,6 +21,7 @@ const {
   isT8LocalMediaPath,
   normalizeT8LocalMediaRef,
   resolveMediaRef,
+  assertResolvedMediaBuffer,
 } = require('../providers/mediaResolver');
 const {
   normalizeRhSite,
@@ -2573,11 +2574,8 @@ async function collectConvertedImageRefs(refs, label = '参考图') {
     throw new Error(`${label}读取失败，已中止生成，避免按无参考图生成${preview ? `：${preview}` : ''}`);
   }
   if (failedRefs.length > 0) {
-    const preview = failedRefs
-      .slice(0, 3)
-      .map((item) => `${summarizeImageRef(item.ref, item.index)} ${item.reason}`)
-      .join('；');
-    console.warn(`[upstream] ${label}部分读取失败 converted=${convertedRefs.length}/${refs.length}: ${preview}`);
+    const slots = failedRefs.slice(0, 3).map((item) => `#${item.index + 1}`).join('、');
+    throw new Error(`${label}部分读取失败（${slots}${failedRefs.length > 3 ? '等' : ''}），已中止生成，避免缺图提交`);
   }
   return convertedRefs;
 }
@@ -3034,7 +3032,7 @@ function sunoNzCompletedOutputFailure(result, materialized) {
       failures: materialized.failures,
     }, family === 'file' ? 'media' : family);
   }
-  if (family === 'text') {
+  if (family === 'text' || family === 'model') {
     if (String(materialized.text || '').trim()) return null;
     return completedRemoteOutputError({ itemCount: 0 }, 'media');
   }
@@ -5400,6 +5398,7 @@ router.post('/image/fal/submit', async (req, res) => {
             // 转 base64 dataURI
             const conv = await refToBananaImage(r);
             if (conv) imgs.push(conv);
+            else throw new Error(`FAL 参考图 #${i + 1} 转换失败，未提交生成`);
           } else {
             const u = await uploadRefToZhenzhen(r, apiKey);
             if (u) imgs.push(u);
@@ -7972,7 +7971,7 @@ router.get('/seedance/query', async (req, res) => {
 // 音频生成(Suno - 异步)
 // 协议(贞贞工坊):POST /suno/generate + GET /suno/feed/:clipIds + POST /suno/submit/music
 // 模式:generate / cover / extend
-// 严格对齐主项目 gpt-image-2-web 的 SUNO_MV_MAP (7 个版本)
+// Workshop V6 contract matches Comfyui-zhenzhen/suno_workshop.py.
 // ========================================================================
 const SUNO_MV_MAP = {
   'v3.0': 'chirp-v3.0',
@@ -7982,12 +7981,23 @@ const SUNO_MV_MAP = {
   'v4.5+': 'chirp-bluejay',
   'v5': 'chirp-crow',
   'v5.5': 'chirp-fenix',
+  'v6': 'chirp-hawk',
+  'v6 wild': 'chirp-hawk-wild',
+  'v6 mini': 'chirp-goose',
 };
 
 // 兼容带 'suno-' 前缀的旧调用方 (如 'suno-v5.5')
 function resolveSunoMv(version) {
   const v = String(version || 'v5.5').replace(/^suno-/i, '');
+  if (['chirp-hawk', 'chirp-hawk-wild', 'chirp-goose'].includes(v)) return v;
   return SUNO_MV_MAP[v] || 'chirp-fenix';
+}
+
+function validateSunoWorkshopText(mv, prompt, tags) {
+  if (!['chirp-hawk', 'chirp-hawk-wild', 'chirp-goose'].includes(mv)) return;
+  if (typeof prompt !== 'string' || (tags != null && typeof tags !== 'string')) throw new Error('Suno V6 prompt/tags 必须是文本');
+  if ([...prompt].length > 5000) throw new Error('Suno V6 prompt 最多 5000 字符');
+  if ([...(tags || '')].length > 1000) throw new Error('Suno V6 tags 最多 1000 字符');
 }
 
 router.post('/audio/submit', async (req, res) => {
@@ -8000,6 +8010,8 @@ router.post('/audio/submit', async (req, res) => {
     return res.status(400).json({ success: false, error: 'prompt 必填' });
   }
   const mv = resolveSunoMv(version);
+  try { validateSunoWorkshopText(mv, prompt ?? '', tags); }
+  catch (error) { return res.status(400).json({ success: false, error: error.message }); }
   let apiKey = String(settings?.zhenzhenApiKey || '');
   try {
     const providerContext = await applyZhenzhenProviderContext(settings, {
@@ -8883,6 +8895,7 @@ async function readProviderLocalMediaRefBuffer(ref, options = {}) {
     const stat = fs.statSync(resolved.path);
     if (!stat.isFile() || stat.size > maximum) return null;
     const buffer = fs.readFileSync(resolved.path);
+    assertResolvedMediaBuffer(buffer, resolved);
     const verified = validateProxyMediaBuffer(buffer, resolved.mime || mimeTypeForProxyFilename(resolved.path), {
       allowedKinds,
       maxBytes: maximum,
