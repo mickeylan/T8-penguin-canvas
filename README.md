@@ -23,7 +23,7 @@ My favorite girl Go YounJung
 ## 💻 桌面版下载
 
 - **Windows x64**：在 [v3.1.6 Release](https://github.com/T8mars/T8-penguin-canvas/releases/tag/v3.1.6) 下载 `T8-PenguinCanvas-Setup-3.1.6.exe`。
-- **macOS Apple Silicon**：v3.1.6 的 Mac 技术预览仅在 GitHub Actions 额度可用时追加到同一 Release；可用资产名为 `T8-PenguinCanvas-3.1.6-mac-arm64.dmg`。支持 M1/M2/M3/M4 等 arm64 Mac，最低 macOS 12，使用 ad-hoc 完整性签名且尚无 Apple Developer ID 公证；首次打开请在 Finder 中右键应用并选择“打开”。若本版未附 Mac 资产，请继续使用 [v3.1.5 Mac 版](https://github.com/T8mars/T8-penguin-canvas/releases/tag/v3.1.5)。Intel Mac 暂不支持。
+- **macOS Apple Silicon**：在 [v3.1.6 Release](https://github.com/T8mars/T8-penguin-canvas/releases/tag/v3.1.6) 下载 `T8-PenguinCanvas-3.1.6-mac-arm64.dmg`。支持 M1/M2/M3/M4 等 arm64 Mac，最低 macOS 12，使用 ad-hoc 完整性签名且尚无 Apple Developer ID 公证；首次打开请在 Finder 中右键应用并选择“打开”。Intel Mac 暂不支持。
 
 ---
 

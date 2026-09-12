@@ -1,17 +1,21 @@
 {
   "$schema": "本文件为 T8-penguin-canvas 节点清单防丢失锁,任何节点删减都需要在 roadmap.md 中说明并更新本文件。",
   "version": "3.1.6",
-  "lastUpdated": "2026-09-12-v3.1.6-release-authorized-history-creator-suno-v6",
+  "lastUpdated": "2026-09-12-v3.1.6-released-dual-platform-history-creator-suno-v6",
   "electronReleaseV316": {
-    "status": "authorized-awaiting-technical-gates",
+    "status": "released-dual-platform-verified",
     "date": "2026-09-12",
     "releaseIncluded": true,
     "version": "3.1.6",
     "tag": "v3.1.6",
-    "latest": "pending",
-    "sourceCommit": null,
-    "publishedAt": null,
+    "latest": true,
+    "sourceCommit": "a747224846aa311c0e7c6a3f0ac4988881b58e36",
+    "publishedAt": "2026-09-12T04:39:06Z",
+    "draft": false,
+    "prerelease": false,
     "url": "https://github.com/T8mars/T8-penguin-canvas/releases/tag/v3.1.6",
+    "macWorkflow": "https://github.com/T8mars/T8-penguin-canvas/actions/runs/34673590415",
+    "releaseRecord": "release",
     "scope": [
       "生成历史当前支持范围：不可变来源/输入快照、参数确认、素材找回、分页检索、放回画布、停止隔离和 Electron 关闭保存保护。",
       "Creator Skill 市场首期：离线签名内置目录、导入/搜索/固定版本/启停/移除、技能全文与三项未做效果认证的产品创作技能。",
@@ -19,40 +23,40 @@
       "完整保留 v3.1.5 及更早节点、模型、Provider 协议、默认渠道、默认值和旧画布；未适配历史输入与未确认 Provider 身份保持失败关闭或明确未验收。"
     ],
     "verification": [
-      "已完成的开发版、浏览器、Electron ABI、限定回归和真实 Provider 验证以各功能条目及专题为准，不把 mock、localhost 或直接 API 证据扩写为安装版/用户环境通过。",
-      "发布前必须通过版本一致、TypeScript、Node 语法、双语、能力同步、公开边界、RH、发布合同、加密、双运行时、native rebuild、app.asar/NSIS、provenance、sealed recovery 与 Windows 远端完整回下载。",
-      "Mac 仅在 GitHub Actions 额度可用时从同一不可变 v3.1.6 Tag 构建并追加；若额度不足则明确跳过，不影响已授权的 Windows 正式发布。"
+      "固定源码与轻量 Tag a747224846aa311c0e7c6a3f0ac4988881b58e36 已推送，Tag 不随发布后证据提交移动；GitHub Release 已发布为非草稿、非预发布 Latest。",
+      "版本一致、TypeScript、Node 语法、双语、能力同步、公开边界、RH、发布合同、加密、双运行时、native rebuild、7 文件 app.asar、NSIS、provenance、sealed recovery、上传与 Windows 远端完整回下载均通过。",
+      "GitHub Actions 额度可用；同一 Tag 的 macOS arm64 workflow 成功完成 DMG/ZIP/更新清单构建、追加上传和 runner 回下载，本机独立完整回下载也通过。六资产详情见顶层 release。"
     ],
     "evidenceBoundary": {
-      "technicalGates": "must-pass-before-release",
+      "technicalGates": "passed-for-release",
       "externalUserInstallF8F10AndProviderIdentity": "deferred-not-passed",
       "deferralApproval": "owner-approved-post-release-v3.1.6",
-      "rule": "用户明确授权直接发布且证据后补；只有外部/用户环境证据可延期，正式技术门、固定源码、Windows 自动更新资产与远端完整下载不可延期。"
+      "rule": "正式技术门、固定源码、Windows 自动更新资产与远端完整下载均已完成；仅外部/用户环境证据按用户授权后补且不视为通过。"
     }
   },
   "seedanceNzSunoV6Actions20260912": {
-    "status": "release-candidate-v3.1.6-live-verified",
+    "status": "released-v3.1.6-live-verified",
     "releaseIncluded": true,
     "scope": "Extend the existing independent Audio node / Suno / Zhenzhen Budget AI House integration from 31 to 34 explicit actions with suno-create-model, suno-upload-cover and suno-upload-extend. Preserve the Zhenzhen AI Workshop channel, old actions, saved canvases and defaults.",
     "contract": "Current https://api.seedance.nz/docs/llms.txt plus F:/AI-T8-video-onekey/ComfyUI/custom_nodes/ComfyUI_Seedance/skill.md and implementation. Create Model requires name plus 6-24 ordered public/uploaded audio URLs and returns model_id. Upload Cover has custom=false gpt_description mode or custom=true prompt/instrumental mode. Upload Extend is fixed custom mode, requires continue_at>=1 and below source duration, and must omit custom/instrumental/gpt_description. V6 versions are v6/v6-wild/v6-mini; custom_model_id omits version and is mutually exclusive with persona_id.",
     "safety": "Action-level allowlists and pre-submit limits; API key from environment only; one paid submit per intended live case, no replay after ambiguous acceptance; poll original task. Saved workflows contain no credentials, task IDs, signed URLs or real result URLs.",
     "details": "docs/seedance-nz-suno-v6-actions.md",
     "verification": "Implementation and four credential-free workflows are complete. Focused contract/UI tests passed after correcting one V6 fixture value; the current workflow/metadata/safety test is 3/3. Syntax, six-file TS/TSX transpile, i18n, JSON, workflow drift and secret scans passed. Low-load real API evidence: upload-cover and upload-extend each submitted once and each returned two fully decoded MP3 plus two validated JPEG; create-model first reached an explicit refunded failure with synthetic tones, then a distinct corrected case using six previously decoded real Suno V6 tracks submitted once and completed after 34 polls with a 36-character UUID. Evidence paths and report hashes are in docs/seedance-nz-suno-v6-actions.md.",
-    "limitations": "The earlier isolated full tsc attempt emitted no diagnostics but exhausted its unchanged 768 MiB heap cap; the formal release reruns the required semantic/build gates without converting that failed attempt into a pass. Direct Provider/API and saved-workflow evidence does not prove GUI save/restart or an installed build. v3.1.6 release is authorized subject to formal technical gates."
+    "limitations": "The earlier isolated full tsc attempt emitted no diagnostics but exhausted its unchanged 768 MiB heap cap and is not counted as a pass; the formal release later passed the required semantic/build gates. Direct Provider/API and saved-workflow evidence does not prove GUI save/restart or installed-build user acceptance. v3.1.6 was published with those limits explicit."
   },
   "sunoWorkshopV620260912": {
-    "status": "release-candidate-v3.1.6-generation-live-verified-wild-identity-unconfirmed",
+    "status": "released-v3.1.6-generation-live-verified-wild-identity-unconfirmed",
     "releaseIncluded": true,
     "models": { "v6": "chirp-hawk", "v6 wild": "chirp-hawk-wild", "v6 mini": "chirp-goose" },
     "scope": "Existing Audio node / Suno / Zhenzhen AI Workshop only. Append version options; preserve legacy versions/default v5.5, saved canvas data and independent Budget AI House actions. Shared generate/cover/extend submit routes use exact V6 mv values; V6 Unicode prompt5000/tags1000 validated before upload/Provider submit. Informational 8-minute maximum and provider legacy-to-base redirect, no invented duration parameter.",
     "reference": "F:/AI-T8-video-onekey/ComfyUI/custom_nodes/Comfyui-zhenzhen/suno_workshop.py and Comfly.py; supplied channel contract; https://suno.com/blog/introducing-v6 is product context only, not API specification.",
     "verification": "23/23 focused+adjacent tests (~637ms), 3 changed frontend files transpile syntax clean and backend Node syntax clean, no full semantic/build/UI claim. Actual submit route executed with isolated settings/ledger (no user DB) against ai.t8star.org: one POST/model, all HTTP200, six MP3 files downloaded, SHA256/probed/full audio stream decoded. Sequential BelowNormal, Node192MiB, ffmpeg1thread, no Electron/full suite/agents. Evidence output/suno-v6-live-2026-09-11T17-09-26-045Z/report.json; passed field covers generation/decode, not exact variant identity.",
-    "limitations": "v6 and mini returned expected model_name chirp-hawk/chirp-goose. BOTH wild outputs returned chirp-hawk despite exact chirp-hawk-wild request; actual wild selection remains unconfirmed and will not be silently remapped or resubmitted. Live cover/extend, 5000/1000 boundary or 8-minute output, GUI save/restart and installed build are not verified. No credentials/task IDs/signed URLs are stored in evidence. v3.1.6 release is authorized with these limits explicit."
+    "limitations": "v6 and mini returned expected model_name chirp-hawk/chirp-goose. BOTH wild outputs returned chirp-hawk despite exact chirp-hawk-wild request; actual wild selection remains unconfirmed and will not be silently remapped or resubmitted. Live cover/extend, 5000/1000 boundary or 8-minute output, GUI save/restart and installed-build user acceptance are not verified. No credentials/task IDs/signed URLs are stored in evidence. v3.1.6 was published with these limits explicit."
   },
   "generationHistoryRecovery20260910": {
-    "currentAcceptanceReceipt20260912": "19 independent development-process scenarios / 25 declared claims and 13 React UI scenarios passed; every paired runner receipt exit0/clean/forced0/remaining0/verifiedtrue. Final bounded ten-file regression passed 56/56 (~4.34s) plus FAL final-request expression 1/1, BelowNormal384MiB serial; no previously accepted client scenario was rerun. Evidence docs/generation-history-acceptance-status.md and docs/generation-history-acceptance-20260912.md. Supported current-scope history recovery is accepted; other unsupported inputs, real user-database/installed-upgrade/power-loss cases and live Provider/external-device scopes remain explicitly unverified. v3.1.6 release is authorized subject to formal technical gates; overall external acceptance remains incomplete.",
+    "currentAcceptanceReceipt20260912": "19 independent development-process scenarios / 25 declared claims and 13 React UI scenarios passed; every paired runner receipt exit0/clean/forced0/remaining0/verifiedtrue. Final bounded ten-file regression passed 56/56 (~4.34s) plus FAL final-request expression 1/1, BelowNormal384MiB serial; no previously accepted client scenario was rerun. Evidence docs/generation-history-acceptance-status.md and docs/generation-history-acceptance-20260912.md. Supported current-scope history recovery is accepted and was published in v3.1.6 after formal technical gates passed; other unsupported inputs, real user-database/installed-upgrade/power-loss cases and live Provider/external-device scopes remain explicitly unverified, so overall external acceptance remains incomplete.",
     "currentAcceptance20260912": "User resumed history repair. Current full-development report2026-09-11T19-24-35-942Z passed7: save-held normal quit/restart, original media recovery/idempotency, real SD2 A/B buttons with controlled loopback Provider and exact history/playback after restart. Standard video input19-22-27-406Z and GPT2.5Flare input19-28-22-925Z passed exact node/bytes/ordered visible references. Matching runner receipts clean/exit0/forced0/remaining0, peak1.51-1.56GiB, unchanged CPU10/Job4GiB/Node768. Acceptance-only resolved Vite watchnull removes project-wide watcher while preserving development/six source entries; tiny real Vite HTTP/configFile fixture passes. No product Vite change. Extended model and error UI coverage remains incomplete; intermittent lazy module timing under diagnosis, failed cases never counted. Current authority docs/generation-history-acceptance-status.md; no private DB/installed upgrade claims, no version/build/stage/commit/push/release.",
-    "status": "release-candidate-v3.1.6-supported-scope-accepted",
+    "status": "released-v3.1.6-supported-scope-accepted",
     "releaseIncluded": true,
     "scope": "生成历史从当前节点 URL 派生改为现有不可变来源/输出槽账本按生成批次读取，统一右侧面板与节点入口，保留当前素材兼容视图。",
     "implemented": [
@@ -217,7 +221,7 @@
     ]
   },
   "creatorSkillMarket20260910": {
-    "status": "release-candidate-v3.1.6-foundation-verified-quality-evidence-deferred",
+    "status": "released-v3.1.6-foundation-verified-quality-evidence-deferred",
     "date": "2026-09-10",
     "releaseIncluded": true,
     "scope": [
@@ -240,7 +244,7 @@
       "真实模型创作、真实输入输出示例、每技能/适配器/模型组合至少 20 个质量用例、人工采用与盲评、10 位新手试点均未完成。",
       "必要多模态技能资源读取、配置/真实模型能力预检与入口衔接、文本作品的完整人工编辑/采用路径、限定修改与场景组合还需完善。",
       "安装版崩溃/升级/卸载恢复、低配性能、Web 多人身份隔离、远程目录维护/追加信任根轮换/撤回治理与后续作者生态仍按 roadmap 保留。",
-      "v3.1.6 仅发布已列出的首期基础能力；生产构建、打包、提交、推送和发布须通过正式技术门。路线图所有整体验收项仍待逐项验证，不能据上述测试宣布完整功能交付。"
+      "v3.1.6 已在正式技术门通过后发布已列出的首期基础能力；路线图所有整体验收项仍待逐项验证，不能据上述测试宣布完整功能交付。"
     ]
   },
   "zhenzhenImageG25Budget20260909": {
@@ -3034,30 +3038,30 @@
     ]
   },
   "release": {
-    "status": "released-v3.1.5-dual-platform-verified",
-    "version": "3.1.5",
-    "date": "2026-09-09",
-    "tag": "v3.1.5",
+    "status": "released-v3.1.6-dual-platform-verified",
+    "version": "3.1.6",
+    "date": "2026-09-12",
+    "tag": "v3.1.6",
     "latest": true,
-    "sourceCommit": "d3d16054f049bfa01aa64e1432c5d382cc806f59",
-    "publishedAt": "2026-09-09T15:39:05Z",
+    "sourceCommit": "a747224846aa311c0e7c6a3f0ac4988881b58e36",
+    "publishedAt": "2026-09-12T04:39:06Z",
     "draft": false,
     "prerelease": false,
-    "url": "https://github.com/T8mars/T8-penguin-canvas/releases/tag/v3.1.5",
+    "url": "https://github.com/T8mars/T8-penguin-canvas/releases/tag/v3.1.6",
     "verification": [
-      "固定源码/Tag d3d16054f049bfa01aa64e1432c5d382cc806f59 已发布为非草稿、非预发布 GitHub Latest；origin/main 与发布分支均已推送该固定源码，发布后证据提交不移动 Tag。",
-      "Windows 唯一一次正式链完成构建、加密、双运行时、native rebuild、NSIS、7 文件 app.asar 合同、provenance、sealed recovery、上传与完整回下载，退出码 0 且 recovery 已清除。",
-      "真实 macOS arm64 workflow https://github.com/T8mars/T8-penguin-canvas/actions/runs/34371680596 成功完成同源构建、ad-hoc 签名、DMG/ZIP/更新清单、追加上传和 runner 回下载；本机独立回下载再次通过。",
-      "双平台六资产并存后 Windows 与 Mac 最终校验均通过；Tag、Release target、macSource、GitHub SHA-256/大小、latest.yml 安装包 SHA-512 和 latest-mac.yml ZIP SHA-512 全部对账一致。",
-      "反馈用户安装、多端协作、F8-F10、真人自然语言体验、设备级交互与安装升级证据只按 owner-approved-post-release-v3.1.5 后补，不视为已经通过。"
+      "固定源码/Tag a747224846aa311c0e7c6a3f0ac4988881b58e36 已发布为非草稿、非预发布 GitHub Latest；origin/main 与发布分支先推送该固定源码，发布后证据提交不移动 Tag。",
+      "Windows 唯一一次生产编译/加密链完成；electron-builder 内置 7za 出现 0xC0000005 后仅复用同次 win-unpacked，以系统 7-Zip 完成 NSIS，随后 7 文件 app.asar、双运行时、native rebuild、provenance、sealed recovery、上传与远端完整回下载全部通过，recovery 已清除。",
+      "真实 macOS arm64 workflow https://github.com/T8mars/T8-penguin-canvas/actions/runs/34673590415 成功完成同源构建、ad-hoc 签名、DMG/ZIP/更新清单、追加上传和 runner 回下载；本机独立完整回下载再次通过。",
+      "六资产的 GitHub 大小/SHA-256、latest.yml 安装包 SHA-512、latest-mac.yml ZIP SHA-512、Tag、Release target 与 macSource 对账一致；Mac 追加后的 Windows 全量回下载完成资产字节核对，GitHub 公共 Release 页面复核仍为 Latest 且指向固定源码。",
+      "真实用户旧库、安装升级、外部设备、多端协作、F8-F10、Creator 技能效果质量和 Suno Wild 型号身份只按 owner-approved-post-release-v3.1.6 后补，不视为已经通过。"
     ],
     "assets": {
-      "T8-PenguinCanvas-Setup-3.1.5.exe": "1375574801 bytes / sha256 250ff3fe7ab9060312056917dbde7e08da0989447990bb08644aa158f2d38bc1",
-      "T8-PenguinCanvas-Setup-3.1.5.exe.blockmap": "1434584 bytes / sha256 c56ab3fce2803c7b4246b73cab8cd27ddda0534cb6907209b36082b664d48557",
-      "latest.yml": "362 bytes / sha256 04f1c4e9c6b0f17d1d898f19408375fcc91d81648170bc9138b55e3da6ff417d",
-      "T8-PenguinCanvas-3.1.5-mac-arm64.dmg": "514103818 bytes / sha256 456fc655cbf3c1e44edfff370ae2b921b12096c82cb0812a8f9525e36c9cc448",
-      "T8-PenguinCanvas-3.1.5-mac-arm64.zip": "506148221 bytes / sha256 e2f906018576e187daa9d27e71dc2ed2683142e36219916c89aca9a09ba3983e",
-      "latest-mac.yml": "536 bytes / sha256 ee34fb2ea78fde8a5faff29f897a31d4b705140c01255ec78e8fa56209233b77"
+      "T8-PenguinCanvas-Setup-3.1.6.exe": "1337976086 bytes / sha256 7e5d7a6a4280a176e33a25d0ff6d8c1f5d3afa521898c57d4b5c795769f064f4",
+      "T8-PenguinCanvas-Setup-3.1.6.exe.blockmap": "1393217 bytes / sha256 f43826b927772abd6977d12bd14025cdbce44a21e08c396705681201ad9af646",
+      "latest.yml": "362 bytes / sha256 6e1d71c09764de016b246c8fe2d6e1e0919b27662ca0c6bc818073dd0c697255",
+      "T8-PenguinCanvas-3.1.6-mac-arm64.dmg": "514432821 bytes / sha256 8fecf837072fc0e379dc691c611a0f169161a736f8b7f1247ad9d6820cb83feb",
+      "T8-PenguinCanvas-3.1.6-mac-arm64.zip": "506425476 bytes / sha256 99a8a2b5eb5c6f42ad5655ac95259ec44bf1fc095882f30f4e07ff5dd8c2eb9e",
+      "latest-mac.yml": "536 bytes / sha256 4e9f8195853ebbbe33cec4472a7291b44182e9f41b87e1e265311c088f927f2b"
     }
   },
   "versionSequencePolicy": {
