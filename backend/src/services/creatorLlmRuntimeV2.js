@@ -9,6 +9,10 @@ const fs = require('node:fs');
 const creativeModelCatalog = require('../shared/creativeModelCatalog.json');
 const { generateChatWithProvider } = require('../providers/adapters');
 const { normalizeAdvancedProviders } = require('../providers/registry');
+const {
+  DEFAULT_PROVIDER_LLM_TIMEOUT_MS,
+  normalizeProviderLlmTimeoutMs,
+} = require('../providers/providerTimeoutPolicy');
 const { digest } = require('./creatorConversationRepository');
 const { normalizeScenePatch } = require('./creatorLongScriptWork');
 
@@ -1305,7 +1309,9 @@ function createCreatorLlmRuntimeV2(options = {}) {
     };
     const providerOptions = {
       signal: controller.signal,
-      timeoutMs: Math.max(30_000, Math.min(10 * 60_000, Number(options.timeoutMs) || 180_000)),
+      timeoutMs: normalizeProviderLlmTimeoutMs(options.timeoutMs, {
+        fallback: DEFAULT_PROVIDER_LLM_TIMEOUT_MS,
+      }),
       fetchImpl: options.fetchImpl,
     };
     let providerCalls = 1;
@@ -1374,7 +1380,9 @@ function createCreatorLlmRuntimeV2(options = {}) {
         stream: responseStream,
       }, {
         signal: controller.signal,
-        timeoutMs: Math.max(30_000, Math.min(10 * 60_000, Number(options.timeoutMs) || 180_000)),
+        timeoutMs: normalizeProviderLlmTimeoutMs(options.timeoutMs, {
+          fallback: DEFAULT_PROVIDER_LLM_TIMEOUT_MS,
+        }),
         fetchImpl: options.fetchImpl,
       });
       providerCalls += 1;

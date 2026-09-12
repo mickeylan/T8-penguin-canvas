@@ -23,6 +23,10 @@ const {
 const { providerIdempotencyHeaders } = require('../services/providerSubmissionContext');
 const { resolveBundledFfprobe } = require('./llmMedia');
 const { withFfmpegProcessSlot } = require('../utils/ffmpegProcessQueue');
+const {
+  MIN_PROVIDER_MEDIA_TIMEOUT_MS,
+  normalizeProviderMediaTimeoutMs,
+} = require('./providerTimeoutPolicy');
 
 const PROVIDER_ID = 'seedance-nz';
 const BASE_URL = config.ZHENZHEN_SD2_BASE_URL;
@@ -830,10 +834,10 @@ const IMAGE_REFERENCE_MAX_BYTES = 10 * 1024 * 1024;
 const DEFAULT_UPLOAD_INTERVAL_MS = 6100;
 const DEFAULT_UPLOAD_CACHE_TTL_MS = 20 * 60 * 60 * 1000;
 const DEFAULT_PROVIDER_RESPONSE_MAX_BYTES = 2 * 1024 * 1024;
-const DEFAULT_PROVIDER_DEADLINE_MS = 30 * 1000;
-const DEFAULT_PROVIDER_IDLE_TIMEOUT_MS = 10 * 1000;
-const DEFAULT_PROVIDER_UPLOAD_DEADLINE_MS = 120 * 1000;
-const DEFAULT_PROVIDER_UPLOAD_IDLE_TIMEOUT_MS = 30 * 1000;
+const DEFAULT_PROVIDER_DEADLINE_MS = MIN_PROVIDER_MEDIA_TIMEOUT_MS;
+const DEFAULT_PROVIDER_IDLE_TIMEOUT_MS = MIN_PROVIDER_MEDIA_TIMEOUT_MS;
+const DEFAULT_PROVIDER_UPLOAD_DEADLINE_MS = MIN_PROVIDER_MEDIA_TIMEOUT_MS;
+const DEFAULT_PROVIDER_UPLOAD_IDLE_TIMEOUT_MS = MIN_PROVIDER_MEDIA_TIMEOUT_MS;
 const SAFE_DIAGNOSTIC_TOKEN = /^[A-Za-z0-9][A-Za-z0-9._:@/+\-]{0,159}$/;
 const SENSITIVE_DIAGNOSTIC_TOKEN = /(?:api[-_]?key|authorization|cookie|token|secret|password|credential)/i;
 
@@ -1014,37 +1018,35 @@ function boundedPositiveInteger(value, fallback, max = Number.MAX_SAFE_INTEGER) 
 }
 
 function providerBoundaryOptions(options = {}) {
+  const allowShortForTests = options.allowShortProviderTimeoutsForTests === true;
   return {
     maxResponseBytes: boundedPositiveInteger(
       options.providerMaxResponseBytes ?? options.maxResponseBytes,
       DEFAULT_PROVIDER_RESPONSE_MAX_BYTES,
       64 * 1024 * 1024,
     ),
-    deadlineMs: boundedPositiveInteger(
+    deadlineMs: normalizeProviderMediaTimeoutMs(
       options.providerDeadlineMs ?? options.deadlineMs,
-      DEFAULT_PROVIDER_DEADLINE_MS,
-      10 * 60 * 1000,
+      { fallback: DEFAULT_PROVIDER_DEADLINE_MS, maximum: 60 * 60 * 1000, allowShortForTests },
     ),
-    idleTimeoutMs: boundedPositiveInteger(
+    idleTimeoutMs: normalizeProviderMediaTimeoutMs(
       options.providerIdleTimeoutMs ?? options.idleTimeoutMs,
-      DEFAULT_PROVIDER_IDLE_TIMEOUT_MS,
-      10 * 60 * 1000,
+      { fallback: DEFAULT_PROVIDER_IDLE_TIMEOUT_MS, maximum: 60 * 60 * 1000, allowShortForTests },
     ),
   };
 }
 
 function providerUploadBoundaryOptions(options = {}) {
+  const allowShortForTests = options.allowShortProviderTimeoutsForTests === true;
   return {
     ...options,
-    providerDeadlineMs: boundedPositiveInteger(
+    providerDeadlineMs: normalizeProviderMediaTimeoutMs(
       options.providerUploadDeadlineMs ?? options.providerDeadlineMs ?? options.deadlineMs,
-      DEFAULT_PROVIDER_UPLOAD_DEADLINE_MS,
-      10 * 60 * 1000,
+      { fallback: DEFAULT_PROVIDER_UPLOAD_DEADLINE_MS, maximum: 60 * 60 * 1000, allowShortForTests },
     ),
-    providerIdleTimeoutMs: boundedPositiveInteger(
+    providerIdleTimeoutMs: normalizeProviderMediaTimeoutMs(
       options.providerUploadIdleTimeoutMs ?? options.providerIdleTimeoutMs ?? options.idleTimeoutMs,
-      DEFAULT_PROVIDER_UPLOAD_IDLE_TIMEOUT_MS,
-      10 * 60 * 1000,
+      { fallback: DEFAULT_PROVIDER_UPLOAD_IDLE_TIMEOUT_MS, maximum: 60 * 60 * 1000, allowShortForTests },
     ),
   };
 }

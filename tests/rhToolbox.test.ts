@@ -1262,6 +1262,7 @@ test('RH toolbox maker defaults use a 60 minute RH polling budget while theme co
   assert.match(maker, /maxPolls:\s*Number\(data\.rhToolboxMakerMaxPolls\) \|\| RH_TOOLBOX_DEFAULT_MAX_POLLS/);
   assert.match(canvas, /rhToolboxMakerMaxPolls:\s*720/);
   assert.match(service, /tool\.runtime\?\.maxPolls \|\| RH_TOOLBOX_DEFAULT_MAX_POLLS/);
+  assert.match(service, /minimumProviderMediaPollCount/);
   assert.match(slamDunkTheme, /content:\s*"TIME OUT"/);
 });
 

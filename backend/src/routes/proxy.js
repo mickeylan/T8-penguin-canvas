@@ -18,6 +18,12 @@ const { tryDecodeDuckPayload } = require('../utils/duckPayload');
 const { normalizeLlmMessageMedia } = require('../providers/llmMedia');
 const seedanceNz = require('../providers/seedanceNz');
 const {
+  DEFAULT_PROVIDER_LLM_TIMEOUT_MS,
+  MIN_PROVIDER_MEDIA_TIMEOUT_MS,
+  normalizeProviderLlmTimeoutMs,
+  normalizeProviderMediaTimeoutMs,
+} = require('../providers/providerTimeoutPolicy');
+const {
   isT8LocalMediaPath,
   normalizeT8LocalMediaRef,
   resolveMediaRef,
@@ -163,33 +169,24 @@ const PROXY_PROVIDER_JSON_MAX_NODES = 50_000;
 const PROXY_PROVIDER_SSE_MAX_BYTES = 32 * 1024 * 1024;
 const PROXY_PROVIDER_SSE_MAX_LINE_BYTES = 2 * 1024 * 1024;
 const FAL_GLTF_JSON_MAX_BYTES = 16 * 1024 * 1024;
-const PROXY_REMOTE_DEADLINE_MS = boundedProxyInteger(
+// This is the shared media-generation boundary, not an RH-specific setting.
+// Model-specific overrides are still clamped to the same 15-minute production
+// minimum so adding a future model cannot silently restore the old 90-second bug.
+const PROXY_REMOTE_DEADLINE_MS = normalizeProviderMediaTimeoutMs(
   process.env.T8_PROXY_REMOTE_DEADLINE_MS,
-  90_000,
-  1_000,
-  5 * 60_000,
+  { fallback: MIN_PROVIDER_MEDIA_TIMEOUT_MS, maximum: 60 * 60_000 },
 );
-// Seedream V5 Pro is a synchronous image endpoint. High-resolution requests
-// can legitimately take longer than the generic Provider boundary before the
-// first response header arrives, so only this protocol receives a longer
-// deadline. All other Provider calls retain the 90-second default above.
-const SEEDREAM_V5_RESPONSE_DEADLINE_MS = boundedProxyInteger(
+const SEEDREAM_V5_RESPONSE_DEADLINE_MS = normalizeProviderMediaTimeoutMs(
   process.env.T8_SEEDREAM_V5_RESPONSE_DEADLINE_MS,
-  5 * 60_000,
-  30_000,
-  10 * 60_000,
+  { fallback: MIN_PROVIDER_MEDIA_TIMEOUT_MS, maximum: 60 * 60_000 },
 );
-const GPT_IMAGE_25_RESPONSE_DEADLINE_MS = boundedProxyInteger(
+const GPT_IMAGE_25_RESPONSE_DEADLINE_MS = normalizeProviderMediaTimeoutMs(
   process.env.T8_GPT_IMAGE_25_RESPONSE_DEADLINE_MS,
-  15 * 60_000,
-  30_000,
-  15 * 60_000,
+  { fallback: MIN_PROVIDER_MEDIA_TIMEOUT_MS, maximum: 60 * 60_000 },
 );
-const PROXY_REMOTE_IDLE_TIMEOUT_MS = boundedProxyInteger(
+const PROXY_REMOTE_IDLE_TIMEOUT_MS = normalizeProviderMediaTimeoutMs(
   process.env.T8_PROXY_REMOTE_IDLE_TIMEOUT_MS,
-  15_000,
-  1_000,
-  60_000,
+  { fallback: MIN_PROVIDER_MEDIA_TIMEOUT_MS, maximum: 60 * 60_000 },
 );
 const PROVIDER_CONNECT_TIMEOUT_MS = boundedProxyInteger(
   process.env.T8_PROVIDER_CONNECT_TIMEOUT_MS,
@@ -392,12 +389,16 @@ function setProxySafeRemoteTestOptions(options) {
 }
 
 function providerFetchDeadlineMs(options = {}) {
-  return boundedProxyInteger(
-    proxySafeRemoteTestOptions?.providerDeadlineMs ?? options?.deadlineMs,
-    PROXY_REMOTE_DEADLINE_MS,
-    10,
-    15 * 60_000,
-  );
+  if (proxySafeRemoteTestOptions?.providerDeadlineMs != null) {
+    return boundedProxyInteger(proxySafeRemoteTestOptions.providerDeadlineMs, PROXY_REMOTE_DEADLINE_MS, 10, 60 * 60_000);
+  }
+  if (options.timeoutKind === 'llm') {
+    return normalizeProviderLlmTimeoutMs(options.deadlineMs, { fallback: DEFAULT_PROVIDER_LLM_TIMEOUT_MS });
+  }
+  return normalizeProviderMediaTimeoutMs(options.deadlineMs, {
+    fallback: PROXY_REMOTE_DEADLINE_MS,
+    maximum: 60 * 60_000,
+  });
 }
 
 function providerRetryDelayMs() {
@@ -1127,8 +1128,17 @@ async function readBoundedProviderResponse(response, label, options = {}) {
     1,
     8 * 1024 * 1024,
   );
-  const deadlineMs = boundedProxyInteger(options.deadlineMs, PROXY_REMOTE_DEADLINE_MS, 10, 5 * 60_000);
-  const idleTimeoutMs = boundedProxyInteger(options.idleTimeoutMs, PROXY_REMOTE_IDLE_TIMEOUT_MS, 10, 60_000);
+  const allowShortForTests = options.allowShortProviderTimeoutsForTests === true;
+  const deadlineMs = normalizeProviderMediaTimeoutMs(options.deadlineMs, {
+    fallback: PROXY_REMOTE_DEADLINE_MS,
+    maximum: 60 * 60_000,
+    allowShortForTests,
+  });
+  const idleTimeoutMs = normalizeProviderMediaTimeoutMs(options.idleTimeoutMs, {
+    fallback: PROXY_REMOTE_IDLE_TIMEOUT_MS,
+    maximum: 60 * 60_000,
+    allowShortForTests,
+  });
   const inheritedDeadlineAt = Number(options.deadlineAt || providerResponseTimings.get(response)?.deadlineAt);
   const timing = {
     deadlineAt: Number.isFinite(inheritedDeadlineAt) && inheritedDeadlineAt > 0
@@ -1966,27 +1976,21 @@ const REMOTE_OUTPUT_RETRY_DELAYS_MS = Object.freeze([0, 500, 1_500]);
 // because the former image-only 25 second budget expired.  The total budget
 // schedules retries; an already-open recovery transfer is allowed to finish
 // its own bounded attempt instead of being cut off at the outer boundary.
-const REMOTE_OUTPUT_MATERIALIZATION_DEADLINE_MS = boundedProxyInteger(
+const REMOTE_OUTPUT_MATERIALIZATION_DEADLINE_MS = normalizeProviderMediaTimeoutMs(
   process.env.T8_REMOTE_OUTPUT_MATERIALIZATION_DEADLINE_MS
     || process.env.T8_IMAGE_OUTPUT_MATERIALIZATION_DEADLINE_MS,
-  5 * 60_000,
-  15_000,
-  15 * 60_000,
+  { fallback: MIN_PROVIDER_MEDIA_TIMEOUT_MS, maximum: 60 * 60_000 },
 );
-const REMOTE_OUTPUT_ATTEMPT_DEADLINE_MS = boundedProxyInteger(
+const REMOTE_OUTPUT_ATTEMPT_DEADLINE_MS = normalizeProviderMediaTimeoutMs(
   process.env.T8_REMOTE_OUTPUT_ATTEMPT_DEADLINE_MS,
-  2 * 60_000,
-  5_000,
-  5 * 60_000,
+  { fallback: MIN_PROVIDER_MEDIA_TIMEOUT_MS, maximum: 60 * 60_000 },
 );
-// Chunk idle time is intentionally looser than the old image-only 15 seconds,
-// while connection establishment fails over quickly to a fresh route.
-const REMOTE_OUTPUT_IDLE_TIMEOUT_MS = boundedProxyInteger(
+// Generated-output reads share the 15-minute media floor. Connection
+// establishment still fails over quickly through its separate boundary below.
+const REMOTE_OUTPUT_IDLE_TIMEOUT_MS = normalizeProviderMediaTimeoutMs(
   process.env.T8_REMOTE_OUTPUT_IDLE_TIMEOUT_MS
     || process.env.T8_IMAGE_OUTPUT_MATERIALIZATION_IDLE_TIMEOUT_MS,
-  30_000,
-  1_000,
-  2 * 60_000,
+  { fallback: MIN_PROVIDER_MEDIA_TIMEOUT_MS, maximum: 60 * 60_000 },
 );
 const REMOTE_OUTPUT_CONNECT_TIMEOUT_MS = boundedProxyInteger(
   process.env.T8_REMOTE_OUTPUT_CONNECT_TIMEOUT_MS,
@@ -6056,7 +6060,11 @@ router.post('/llm', async (req, res) => {
       },
       body: JSON.stringify(payload),
       signal: req.t8AbortSignal,
-    }, 'Provider', { noRetry: promptEnhancerProfile });
+    }, 'Provider', {
+      noRetry: promptEnhancerProfile,
+      timeoutKind: 'llm',
+      deadlineMs: DEFAULT_PROVIDER_LLM_TIMEOUT_MS,
+    });
 
     // ===== 流式分支:SSE pass-through =====
     if (payload.stream) {
@@ -8299,7 +8307,7 @@ router.post('/audio/upload', audioUpload.single('file'), async (req, res) => {
     await readBoundedProviderResponse(r3, 'Upload finish', { maxBytes: 64 * 1024 });
     // 4) poll status
     let clipId = '';
-    for (let i = 0; i < 30; i++) {
+    for (let i = 0; i < Math.ceil(MIN_PROVIDER_MEDIA_TIMEOUT_MS / 2000); i++) {
       await new Promise((resolve) => setTimeout(resolve, 2000));
       const sr = await fetchProviderResponse(`${baseUrl}/suno/uploads/audio/${uploadId}`, { headers: { Authorization: `Bearer ${apiKey}` } });
       if (!sr.ok) {

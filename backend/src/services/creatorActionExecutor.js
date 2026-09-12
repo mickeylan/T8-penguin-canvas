@@ -10,6 +10,7 @@ const { readSceneProduction } = require('./creatorSceneProduction');
 const seedanceNz = require('../providers/seedanceNz');
 const creativeModelCatalog = require('../shared/creativeModelCatalog.json');
 const { safeRemoteMediaDownload } = require('../utils/safeRemoteMediaFetch');
+const { MIN_PROVIDER_MEDIA_TIMEOUT_MS } = require('../providers/providerTimeoutPolicy');
 
 const MAX_IMAGE_BYTES = 40 * 1024 * 1024;
 const MAX_VIDEO_BYTES = 1024 * 1024 * 1024;
@@ -191,7 +192,7 @@ class CreatorActionExecutor {
     this.active = new Map();
     this.continuations = new Map();
     this.pollIntervalMs = Math.max(100, Math.min(10_000, Number(options.pollIntervalMs) || 3_000));
-    this.timeoutMs = Math.max(30_000, Math.min(30 * 60_000, Number(options.timeoutMs) || 12 * 60_000));
+    this.timeoutMs = Math.max(MIN_PROVIDER_MEDIA_TIMEOUT_MS, Math.min(30 * 60_000, Number(options.timeoutMs) || MIN_PROVIDER_MEDIA_TIMEOUT_MS));
     const continuationDelays = options.continuationRetryDelaysMs === undefined
       ? [750, 2_000, 5_000]
       : options.continuationRetryDelaysMs;
@@ -357,11 +358,11 @@ class CreatorActionExecutor {
           protocols: ['https:'],
           maxBytes: maximum,
           maxRedirects: 6,
-          deadlineMs: kind === 'image' ? 180_000 : 12 * 60_000,
-          idleTimeoutMs: 45_000,
+          deadlineMs: MIN_PROVIDER_MEDIA_TIMEOUT_MS,
+          idleTimeoutMs: MIN_PROVIDER_MEDIA_TIMEOUT_MS,
           accept: kind === 'image' ? 'image/*,*/*;q=0.2' : 'video/*,*/*;q=0.2',
           trustedProviderOutput: true,
-          trustedProviderFallbackDeadlineMs: kind === 'image' ? 120_000 : 8 * 60_000,
+          trustedProviderFallbackDeadlineMs: MIN_PROVIDER_MEDIA_TIMEOUT_MS,
         });
         const descriptor = fs.openSync(staging, 'r');
         const header = Buffer.alloc(16);

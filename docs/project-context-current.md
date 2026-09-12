@@ -1,18 +1,19 @@
 # 当前项目上下文
 
-更新：2026-09-12。仅维护当前事实；长期规则见根 `SKILL.md` 和 `AGENTS.md`。本页预算 80 行 / 8 KiB，旧检查点迁入专题，不追加长日报。
+更新：2026-09-13。仅维护当前事实；长期规则见根 `SKILL.md` 和 `AGENTS.md`。本页预算 80 行 / 8 KiB，旧检查点迁入专题，不追加长日报。
 
-- 默认目录 `E:\PenguinPravite\T8-penguin-canvas`；branch `codex/release-v3.0.8-volcengine-assets-ux`，common dir `.git`。v3.1.6 正式源码与 Tag 固定为 `a747224846aa311c0e7c6a3f0ac4988881b58e36`；发布后证据提交可推进当前分支与 `main`，但不得移动 Tag。实际开工仍以 git/worktree 门为准。
-- package 版本为 `3.1.6`；[v3.1.6 GitHub Release](https://github.com/T8mars/T8-penguin-canvas/releases/tag/v3.1.6) 已于 `2026-09-12T04:39:06Z` 发布为非草稿、非预发布 Latest，Windows 与 macOS arm64 六个安装/自动更新资产已附加。
-- 本任务正式发布已完成；固定源码、Windows 正式包、GitHub 推送/Tag/Latest、自动更新资产和额度允许的同源 Mac 包均已完成。外部证据仍按 `owner-approved-post-release-v3.1.6` 后补，不视为通过。
+- 默认目录 `E:\PenguinPravite\T8-penguin-canvas`；branch `codex/release-v3.0.8-volcengine-assets-ux`，common dir `.git`。v3.1.6 正式源码与 Tag 继续固定为 `a747224846aa311c0e7c6a3f0ac4988881b58e36`，不得移动；实际开工仍以 git/worktree 门为准。
+- package 版本已进入 `3.1.7` 发布候选；本次仅纳入 Provider 超时策略与相邻恢复/工具箱轮询保护，固定源码、Tag、Windows 自动更新资产和 GitHub Latest 尚待正式发布链完成。
+- 用户已明确授权 v3.1.7 构建、推送、Tag 与 Release；外部/用户环境证据按 `owner-approved-post-release-v3.1.7` 后补且不视为通过。Mac 仅在 GitHub Actions 额度不足时允许暂缓。
 
 ## 当前检查点
 
 | 事项 | 当前事实与下一步 |
 | --- | --- |
-| v3.1.6 发布 | Windows 唯一一次生产编译/加密链和系统 7-Zip 复用同次 `win-unpacked` 的 NSIS 恢复完成，7 文件 app.asar、双运行时、provenance/sealed recovery、上传及完整回下载通过；[macOS workflow](https://github.com/T8mars/T8-penguin-canvas/actions/runs/34673590415) 同源成功，本机独立回下载通过。六资产大小与 SHA-256 见 `feature release`。Tag 固定，不随本页证据提交移动。 |
+| v3.1.7 发布 | 版本合同与 Release notes 已进入候选；下一步依次完成发布门、固定源码提交/推送/Tag、唯一一次 Windows 正式链及额度允许的同源 Mac workflow，完成后再把技术事实写回 `feature electronReleaseV317` 与 `feature release`。 |
 | 文档轻量化 | 已完成：根手册62行，原文逐字节归档；默认三份上下文约18KiB，features/roadmap按需读。8组校验通过，1353份源码/配置/原测试/技能散列未变，详见[校验记录](../local-private/context-maintenance/verification.json)。后续遵守手册开头预算。 |
 | 生成历史 | 当前支持范围已随 v3.1.6 发布；19个完整客户端场景/25项、React UI 13项、限定回归56/56通过，通过进程正常退出/强制0/残留0。完整状态与剩余范围见[验收清单](generation-history-acceptance-status.md)及[证据索引](generation-history-acceptance-20260912.md)。 |
+| Provider 超时策略 | v3.1.7 候选已移除媒体生成通用代理 90 秒边界，并覆盖扩展适配器、工具箱自定义轮询、导演分镜与崩溃恢复：媒体全链路最低 15 分钟，LLM 默认且最长 3 分钟；连接探测/重试间隔不变。详情用 `feature providerTimeoutPolicy20260913` 查询。 |
 | 历史修复最终限定检查 | 专题清单与 features 回执已同步为 19/25+React UI 13、限定回归56/56；本轮按暂停点复核后未重跑。支持范围已接受；用户旧库、安装升级、断电、真实Provider、外部设备与其他未适配输入仍不计通过。 |
 | 工坊 Suno V6 | 三版本已随 v3.1.6 发布且有出音证据；wild请求 `chirp-hawk-wild` 实际返回 `chirp-hawk`，身份需渠道确认。保留旧模型/默认与独立平价协议，不再自动付费重试。用 `feature sunoWorkshopV620260912` 查完整记录。 |
 | 平价小屋 Suno V6 | 三项动作、34项目录、双语UI和4份无密钥工作流已随 v3.1.6 发布。真实API三动作各有成功案例；失败的纯测试音模型案例明确记录且未冒认。详见[专题与证据](seedance-nz-suno-v6-actions.md)。 |

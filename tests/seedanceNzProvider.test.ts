@@ -43,6 +43,7 @@ test('seedance.nz provider boundary forwards options.signal and aborts a hanging
     baseUrl: 'https://api.seedance.nz',
     signal: controller.signal,
     providerDeadlineMs: 5_000,
+    allowShortProviderTimeoutsForTests: true,
     fetchImpl: (_url: string, init?: RequestInit) => new Promise((_resolve, reject) => {
       observedSignal = init?.signal as AbortSignal | undefined;
       if (init?.signal?.aborted) {
@@ -2502,6 +2503,7 @@ test('seedance.nz enforces idle timeout while streaming and cancels the provider
     {
       providerDeadlineMs: 250,
       providerIdleTimeoutMs: 25,
+      allowShortProviderTimeoutsForTests: true,
       fetchImpl: async () => new Response(body, { status: 200 }),
     },
   ));
@@ -2520,6 +2522,7 @@ test('seedance.nz bounds response-header wait even when fetch ignores AbortSigna
     'test-key',
     {
       providerDeadlineMs: 30,
+      allowShortProviderTimeoutsForTests: true,
       fetchImpl: async (_url: string, init?: RequestInit) => {
         signal = init?.signal || undefined;
         return await new Promise<Response>(() => {});
@@ -2533,13 +2536,14 @@ test('seedance.nz bounds response-header wait even when fetch ignores AbortSigna
   assert.ok(Date.now() - startedAt < 500);
 });
 
-test('seedance.nz gives media uploads a 120s deadline and 30s idle boundary by default', () => {
+test('seedance.nz gives Provider calls and media uploads the shared 15-minute floor by default', () => {
   const source = readFileSync(
     new URL('../backend/src/providers/seedanceNz.js', import.meta.url),
     'utf8',
   );
-  assert.match(source, /DEFAULT_PROVIDER_UPLOAD_DEADLINE_MS\s*=\s*120\s*\*\s*1000/);
-  assert.match(source, /DEFAULT_PROVIDER_UPLOAD_IDLE_TIMEOUT_MS\s*=\s*30\s*\*\s*1000/);
+  assert.match(source, /DEFAULT_PROVIDER_DEADLINE_MS\s*=\s*MIN_PROVIDER_MEDIA_TIMEOUT_MS/);
+  assert.match(source, /DEFAULT_PROVIDER_UPLOAD_DEADLINE_MS\s*=\s*MIN_PROVIDER_MEDIA_TIMEOUT_MS/);
+  assert.match(source, /DEFAULT_PROVIDER_UPLOAD_IDLE_TIMEOUT_MS\s*=\s*MIN_PROVIDER_MEDIA_TIMEOUT_MS/);
   assert.match(source, /providerUploadDeadlineMs\s*\?\?\s*options\.providerDeadlineMs/);
   assert.match(source, /providerUploadIdleTimeoutMs\s*\?\?\s*options\.providerIdleTimeoutMs/);
 });
@@ -2557,6 +2561,7 @@ test('seedance.nz never replays an upload whose timeout leaves acceptance ambigu
       uploadIntervalMs: 0,
       providerDeadlineMs: 10,
       providerUploadDeadlineMs: 45,
+      allowShortProviderTimeoutsForTests: true,
       fetchImpl: async (_url: string, init?: RequestInit) => {
         providerCalls += 1;
         signal = init?.signal || undefined;
