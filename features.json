@@ -1,20 +1,20 @@
 {
   "$schema": "本文件为 T8-penguin-canvas 节点清单防丢失锁,任何节点删减都需要在 roadmap.md 中说明并更新本文件。",
   "version": "3.1.7",
-  "lastUpdated": "2026-09-13-v3.1.7-release-candidate",
+  "lastUpdated": "2026-09-13-v3.1.7-dual-platform-release-verified",
   "electronReleaseV317": {
-    "status": "release-authorized-source-build-pending",
+    "status": "released-dual-platform-verified",
     "date": "2026-09-13",
-    "releaseIncluded": false,
+    "releaseIncluded": true,
     "version": "3.1.7",
     "tag": "v3.1.7",
-    "latest": false,
-    "sourceCommit": null,
-    "publishedAt": null,
+    "latest": true,
+    "sourceCommit": "9771860cacadf67b76385faa405de8ee2db5c87a",
+    "publishedAt": "2026-09-12T17:41:11Z",
     "draft": false,
     "prerelease": false,
     "url": "https://github.com/T8mars/T8-penguin-canvas/releases/tag/v3.1.7",
-    "macWorkflow": null,
+    "macWorkflow": "https://github.com/T8mars/T8-penguin-canvas/actions/runs/34709089838",
     "releaseRecord": "release",
     "scope": [
       "媒体 Provider 的提交、响应读取、上传、轮询、任务恢复与生成结果回下载生产链路统一最低 15 分钟，移除通用代理 90 秒提前终止。",
@@ -23,10 +23,11 @@
     ],
     "verification": [
       "提交前 Provider/超时/双平台更新与发布合同回归 174/174、Electron 打包合同 16/16、策略与前端恢复 6/6、FAL 自定义短轮询 1/1 通过；TypeScript、双语、能力同步、公开边界、RH 与上下文门通过。",
-      "正式源码提交、Tag、Windows 自动更新资产、GitHub Latest 和远端完整回下载尚待本次发布链完成，当前条目不提前标记为已发布。"
+      "固定源码与轻量 Tag 9771860cacadf67b76385faa405de8ee2db5c87a 已推送到 origin/main 与发布分支；Windows 唯一一次正式生产链完成编译、加密、双运行时、native rebuild、NSIS、post-build、provenance、sealed recovery、上传和完整回下载，recovery 已清除。",
+      "真实 macOS arm64 workflow 34709089838 从同一 Tag 完成 ad-hoc 签名技术预览 DMG/ZIP/更新清单、追加上传和 runner 回下载；本机独立 Mac 三资产与 Mac 追加后的 Windows 三资产均再次完整回下载通过。六资产详情见顶层 release。"
     ],
     "evidenceBoundary": {
-      "technicalGates": "required-before-release",
+      "technicalGates": "passed-for-release",
       "externalUserInstallAndF8F10": "deferred-not-passed",
       "deferralApproval": "owner-approved-post-release-v3.1.7",
       "rule": "仅外部/用户环境证据允许后补；正式技术门、固定源码、Windows 自动更新资产和远端完整性验证不可延期。"
@@ -3068,30 +3069,30 @@
     ]
   },
   "release": {
-    "status": "released-v3.1.6-dual-platform-verified",
-    "version": "3.1.6",
-    "date": "2026-09-12",
-    "tag": "v3.1.6",
+    "status": "released-v3.1.7-dual-platform-verified",
+    "version": "3.1.7",
+    "date": "2026-09-13",
+    "tag": "v3.1.7",
     "latest": true,
-    "sourceCommit": "a747224846aa311c0e7c6a3f0ac4988881b58e36",
-    "publishedAt": "2026-09-12T04:39:06Z",
+    "sourceCommit": "9771860cacadf67b76385faa405de8ee2db5c87a",
+    "publishedAt": "2026-09-12T17:41:11Z",
     "draft": false,
     "prerelease": false,
-    "url": "https://github.com/T8mars/T8-penguin-canvas/releases/tag/v3.1.6",
+    "url": "https://github.com/T8mars/T8-penguin-canvas/releases/tag/v3.1.7",
     "verification": [
-      "固定源码/Tag a747224846aa311c0e7c6a3f0ac4988881b58e36 已发布为非草稿、非预发布 GitHub Latest；origin/main 与发布分支先推送该固定源码，发布后证据提交不移动 Tag。",
-      "Windows 唯一一次生产编译/加密链完成；electron-builder 内置 7za 出现 0xC0000005 后仅复用同次 win-unpacked，以系统 7-Zip 完成 NSIS，随后 7 文件 app.asar、双运行时、native rebuild、provenance、sealed recovery、上传与远端完整回下载全部通过，recovery 已清除。",
-      "真实 macOS arm64 workflow https://github.com/T8mars/T8-penguin-canvas/actions/runs/34673590415 成功完成同源构建、ad-hoc 签名、DMG/ZIP/更新清单、追加上传和 runner 回下载；本机独立完整回下载再次通过。",
+      "固定源码/Tag 9771860cacadf67b76385faa405de8ee2db5c87a 已发布为非草稿、非预发布 GitHub Latest；origin/main 与发布分支先推送该固定源码，发布后证据提交不移动 Tag。",
+      "Windows 唯一一次生产编译/加密链完成；7 文件 app.asar、双运行时、native rebuild、NSIS、provenance、sealed recovery、上传与远端完整回下载全部通过，recovery 已清除。",
+      "真实 macOS arm64 workflow https://github.com/T8mars/T8-penguin-canvas/actions/runs/34709089838 成功完成同源构建、ad-hoc 签名、DMG/ZIP/更新清单、追加上传和 runner 回下载；本机独立完整回下载再次通过。",
       "六资产的 GitHub 大小/SHA-256、latest.yml 安装包 SHA-512、latest-mac.yml ZIP SHA-512、Tag、Release target 与 macSource 对账一致；Mac 追加后的 Windows 全量回下载完成资产字节核对，GitHub 公共 Release 页面复核仍为 Latest 且指向固定源码。",
-      "真实用户旧库、安装升级、外部设备、多端协作、F8-F10、Creator 技能效果质量和 Suno Wild 型号身份只按 owner-approved-post-release-v3.1.6 后补，不视为已经通过。"
+      "真实用户旧库、安装升级、外部设备、多端协作与 F8-F10 只按 owner-approved-post-release-v3.1.7 后补，不视为已经通过。"
     ],
     "assets": {
-      "T8-PenguinCanvas-Setup-3.1.6.exe": "1337976086 bytes / sha256 7e5d7a6a4280a176e33a25d0ff6d8c1f5d3afa521898c57d4b5c795769f064f4",
-      "T8-PenguinCanvas-Setup-3.1.6.exe.blockmap": "1393217 bytes / sha256 f43826b927772abd6977d12bd14025cdbce44a21e08c396705681201ad9af646",
-      "latest.yml": "362 bytes / sha256 6e1d71c09764de016b246c8fe2d6e1e0919b27662ca0c6bc818073dd0c697255",
-      "T8-PenguinCanvas-3.1.6-mac-arm64.dmg": "514432821 bytes / sha256 8fecf837072fc0e379dc691c611a0f169161a736f8b7f1247ad9d6820cb83feb",
-      "T8-PenguinCanvas-3.1.6-mac-arm64.zip": "506425476 bytes / sha256 99a8a2b5eb5c6f42ad5655ac95259ec44bf1fc095882f30f4e07ff5dd8c2eb9e",
-      "latest-mac.yml": "536 bytes / sha256 4e9f8195853ebbbe33cec4472a7291b44182e9f41b87e1e265311c088f927f2b"
+      "T8-PenguinCanvas-Setup-3.1.7.exe": "1378593013 bytes / sha256 d4ab20428bd8d135ea64a2311899ee10359d6d35fa27dd007aaf1cd42ec43266",
+      "T8-PenguinCanvas-Setup-3.1.7.exe.blockmap": "1437700 bytes / sha256 3975cf07c61a8a5218486a86f08d350486b351990f195fccd7924b714bb571f5",
+      "latest.yml": "362 bytes / sha256 7a1541bad4d39250b07ddf5ad07a708c06ae65152aa0231588ea210fb5cc6752",
+      "T8-PenguinCanvas-3.1.7-mac-arm64.dmg": "514441904 bytes / sha256 50274b56504bc2fc2a330474bbf5c49d19a47cf6d8197028089fddb5becacd49",
+      "T8-PenguinCanvas-3.1.7-mac-arm64.zip": "506435424 bytes / sha256 e7f8bfdd3d3cae66448a6282365b00f51be2b916e5d570a8e770bfe7187e62e3",
+      "latest-mac.yml": "536 bytes / sha256 d1d19568bf560f5108d46987e33c40768ed22fa9cfaa6ae4e8a1d8747f5d5531"
     }
   },
   "versionSequencePolicy": {
@@ -15699,7 +15700,7 @@
     ]
   },
   "providerTimeoutPolicy20260913": {
-    "status": "release-authorized-v3.1.7-targeted-verified",
+    "status": "released-v3.1.7-targeted-verified",
     "date": "2026-09-13",
     "releaseIncluded": true,
     "contract": {
@@ -15720,7 +15721,7 @@
       "Electron ABI database slice passed 41/44; the remaining three were stopped before task assertions by the schema32 host storage-capacity admission gate and are not counted as passes.",
       "Type-check, i18n, generated feature synchronization and compact project-context validation passed.",
       "v3.1.7 pre-release contracts passed: Provider/timeout/desktop-update suite 174/174, Electron packaging 16/16, policy plus frontend recovery 6/6, and FAL short-runtime clamp 1/1.",
-      "v3.1.7 production build, Electron package, push, immutable Tag and automatic-update Release are explicitly authorized and remain pending until the formal release chain reports success."
+      "v3.1.7 fixed source, Electron package, immutable Tag, Windows and macOS automatic-update assets, GitHub Latest, runner verification and independent full-download verification all passed; external user/install/F8-F10 evidence remains explicitly deferred, not passed."
     ]
   }
 }
